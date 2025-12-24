@@ -1,5 +1,11 @@
 name: CI/CD Pipeline
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+  actions: read
+
 on:
   push:
     branches: [ main, develop ]
@@ -33,7 +39,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       
       - name: Run smoke tests
-        run: npx playwright test --grep @smoke --project smoke
+        run: npx playwright test --grep "@smoke"
         env:
           TEST_ENV: staging
           CI: true
@@ -77,7 +83,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       
       - name: Run regression tests (Shard ${{ matrix.shard }}/2)
-        run: npx playwright test --grep @regression --shard=${{ matrix.shard }}/2
+        run: npx playwright test --grep "@regression" --shard=${{ matrix.shard }}/2
         env:
           TEST_ENV: staging
           CI: true
