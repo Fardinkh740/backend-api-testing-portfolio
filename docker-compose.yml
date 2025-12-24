@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  test-dev:
+    build: .
+    environment:
+      - TEST_ENV=dev
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    command: npx playwright test --grep "@smoke"
+    
+  test-staging:
+    build: .
+    environment:
+      - TEST_ENV=staging
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    command: npx playwright test
+    
+  test-prod:
+    build: .
+    environment:
+      - TEST_ENV=prod
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+      - ./playwright-report:/app/playwright-report
+    command: npx playwright test --grep "@smoke"
+    
+  regression-shard-1:
+    build: .
+    environment:
+      - TEST_ENV=staging
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+    command: npx playwright test --grep "@regression" --shard=1/2
+    
+  regression-shard-2:
+    build: .
+    environment:
+      - TEST_ENV=staging
+      - CI=true
+    volumes:
+      - ./test-results:/app/test-results
+    command: npx playwright test --grep "@regression" --shard=2/2
+
+volumes:
+  test-results:
+  playwright-report:
