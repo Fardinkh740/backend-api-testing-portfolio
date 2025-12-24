@@ -1,8 +1,7 @@
 const { test, expect } = require('@playwright/test');
 const { generateTestPost, API_ENDPOINTS } = require('../../utils/api-helpers');
 
-test('should create new post', async ({ request }) => {
-  // Use helper to generate unique test data
+test('@smoke should create new post', async ({ request }) => {
   const newPost = generateTestPost();
 
   const response = await request.post(API_ENDPOINTS.posts, {
