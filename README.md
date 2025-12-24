@@ -247,6 +247,44 @@ npx playwright test --ui
 
 ---
 
+---
+
+## Docker Setup
+
+### Run with Docker
+
+**Build image:**
+```bash
+docker build -t api-test-platform .
+```
+
+**Run smoke tests:**
+```bash
+docker run -e TEST_ENV=staging api-test-platform npx playwright test --grep "@smoke"
+```
+
+**Run with Docker Compose:**
+```bash
+# Development environment
+docker-compose up test-dev
+
+# Staging with full suite
+docker-compose up test-staging
+
+# Parallel regression
+docker-compose up regression-shard-1 regression-shard-2
+```
+
+**Benefits:**
+- Consistent environment across dev/CI/prod
+- No local dependency management
+- Easy CI/CD integration
+- Portable and cloud-ready
+
+**See [Docker Documentation](docs/DOCKER.md) for advanced usage.**
+
+---
+
 ## Technical Stack
 
 **Core:**

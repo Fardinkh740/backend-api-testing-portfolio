@@ -51,14 +51,8 @@ module.exports = defineConfig({
   // Projects for different test types
   projects: [
     {
-      name: 'smoke',
-      testMatch: /.*smoke.*.spec.js/,
-      retries: 0,  // Smoke tests shouldn't be flaky
-    },
-    {
-      name: 'regression',
-      testMatch: /.*(?<!smoke).spec.js/,
-      retries: envConfig.retries,
+      name: 'chromium',
+      use: { browserName: 'chromium' },
     },
   ],
 });

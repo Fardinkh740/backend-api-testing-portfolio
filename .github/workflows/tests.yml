@@ -16,6 +16,39 @@ on:
   workflow_dispatch:  # Manual trigger
 
 jobs:
+  # Docker Build & Test (Optional - demonstrates containerization)
+  docker-build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        run: docker build -t api-test-platform:${{ github.sha }} .
+      
+      - name: Run smoke tests in Docker
+        run: |
+          docker run \
+            -e TEST_ENV=staging \
+            -e CI=true \
+            api-test-platform:${{ github.sha }} \
+            npx playwright test --grep "@smoke"
+      
+      - name: Save Docker image (optional)
+        run: docker save api-test-platform:${{ github.sha }} | gzip > docker-image.tar.gz
+      
+      - name: Upload Docker image artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image
+          path: docker-image.tar.gz
+          retention-days: 7
+          
   # Stage 1: Smoke Tests (Fast Feedback)
   smoke-tests:
     name: Smoke Tests (Critical Path)
